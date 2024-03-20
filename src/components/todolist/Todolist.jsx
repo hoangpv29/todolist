@@ -6,13 +6,14 @@ class TodoList extends Component {
     super(props);
     this.state = {
       items: [],
-      newItemText: "",
-      editingItemId: null,
-      editingItemText: "",
-      deletingItemId: null, // Thêm trạng thái cho id mục đang được xóa
+      newItemText: "", // Kiểu string: Chứa văn bản nhập mới cho mục mới
+      editingItemId: null, // Kiểu number: ID của mục đang được chỉnh sửa
+      editingItemText: "", // Kiểu string: Văn bản mới cho mục đang được chỉnh sửa
+      deletingItemId: null, // Kiểu number: ID của mục đang được xóa
     };
   }
 
+  // Lifecycle method: componentDidMount
   componentDidMount() {
     const items = localStorage.getItem("items");
     if (items) {
@@ -20,16 +21,19 @@ class TodoList extends Component {
     }
   }
 
+  // Lifecycle method: componentDidUpdate
   componentDidUpdate(prevProps, prevState) {
     if (prevState.items !== this.state.items) {
       localStorage.setItem("items", JSON.stringify(this.state.items));
     }
   }
 
+  // Hàm xử lý sự kiện thay đổi nội dung của ô nhập
   handleInputChange = (event) => {
     this.setState({ newItemText: event.target.value });
   };
 
+  // Hàm xử lý sự kiện thêm mục mới
   handleAddItem = () => {
     if (this.state.newItemText.trim() !== "") {
       this.setState((prevState) => ({
@@ -42,6 +46,7 @@ class TodoList extends Component {
     }
   };
 
+  // Hàm xử lý sự kiện bắt đầu chỉnh sửa mục
   handleEditItem = (itemId, itemText) => {
     this.setState({
       editingItemId: itemId,
@@ -49,6 +54,7 @@ class TodoList extends Component {
     });
   };
 
+  // Hàm xử lý sự kiện lưu thay đổi của mục
   handleSaveItem = () => {
     const { editingItemId, editingItemText } = this.state;
     this.setState((prevState) => ({
@@ -60,6 +66,7 @@ class TodoList extends Component {
     }));
   };
 
+  // Hàm xử lý sự kiện hủy chỉnh sửa mục
   handleCancelEdit = () => {
     this.setState({ editingItemId: null, editingItemText: "" });
   };
