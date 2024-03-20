@@ -56,7 +56,10 @@
   color: white;
 }
 
-.edit-button,
+.edit-button {
+  background-color: #1695df;
+  color: white;
+}
 .delete-button {
   background-color: #f44336;
   color: white;
