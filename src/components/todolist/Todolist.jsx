@@ -6,14 +6,14 @@ class TodoList extends Component {
     super(props);
     this.state = {
       items: [],
-      newItemText: "", // Kiểu string: Chứa văn bản nhập mới cho mục mới
-      editingItemId: null, // Kiểu number: ID của mục đang được chỉnh sửa
-      editingItemText: "", // Kiểu string: Văn bản mới cho mục đang được chỉnh sửa
-      deletingItemId: null, // Kiểu number: ID của mục đang được xóa
+      newItemText: "", 
+      editingItemId: null, 
+      editingItemText: "", 
+      deletingItemId: null, 
     };
   }
 
-  // Lifecycle method: componentDidMount
+  //  componentDidMount
   componentDidMount() {
     const items = localStorage.getItem("items");
     if (items) {
@@ -21,7 +21,7 @@ class TodoList extends Component {
     }
   }
 
-  // Lifecycle method: componentDidUpdate
+  //  componentDidUpdate
   componentDidUpdate(prevProps, prevState) {
     if (prevState.items !== this.state.items) {
       localStorage.setItem("items", JSON.stringify(this.state.items));
