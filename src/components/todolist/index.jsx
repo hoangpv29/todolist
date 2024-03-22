@@ -180,7 +180,7 @@ class TodoList extends Component {
                 </>
               )}
 
-              {localStorage.getItem("items") && (
+              {localStorage.getItem("items") && ( //nếu có item trong localsto thì hiển thị item ra hàm hình
                 <>
                   {/* Hiển thị nội dung của mục */}
                   <span className="item-text">{item.text}</span>
