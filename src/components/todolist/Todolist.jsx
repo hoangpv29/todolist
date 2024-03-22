@@ -265,6 +265,9 @@ class TodoList extends Component {
       }
     });
   };
+  showDom = () => {
+    this.setState({ show: !this.state.show });
+  };
 
   render() {
     return (
@@ -272,9 +275,7 @@ class TodoList extends Component {
         <h1>Todo List</h1>
         {/* Ô nhập cho mục mới */}
         {this.state.show ? <h2>Timer: {this.state.seconds} seconds</h2> : null}
-        <button onClick={() => this.setState({ show: !this.state.show })}>
-          Show - Hidden
-        </button>
+        <button onClick={this.showDom}>Show - Hidden</button>
         <input
           type="text"
           value={this.state.newItemText}
