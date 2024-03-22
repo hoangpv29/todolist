@@ -149,7 +149,7 @@ class TodoList extends Component {
         <Button
           onClick={this.handleAddItem}
           title={"Add Item"}
-          typeButtonColor={"add"}
+          styleButton={"add"}
         />
 
         {/* Danh sách các mục trong todo list */}
@@ -168,13 +168,13 @@ class TodoList extends Component {
 
                   <Button
                     title={"Save"}
-                    typeButtonColor={"save"}
+                    styleButton={"save"}
                     onClick={this.handleSaveItem}
                   />
 
                   <Button
                     title={"Cancel"}
-                    typeButtonColor={"cancel"}
+                    styleButton={"cancel"}
                     onClick={this.handleCancelEdit}
                   />
                 </>
@@ -187,7 +187,7 @@ class TodoList extends Component {
 
                   <Button
                     title={"Edit"}
-                    typeButtonColor={"edit"}
+                    styleButton={"edit"}
                     onClick={this.handleEditItem}
                     itemId={item.id}
                     itemText={item.text}
@@ -195,7 +195,7 @@ class TodoList extends Component {
 
                   <Button
                     title={"Delete"}
-                    typeButtonColor={"delete"}
+                    styleButton={"delete"}
                     onClick={this.handleDeleteItem}
                     itemId={item.id}
                   />
