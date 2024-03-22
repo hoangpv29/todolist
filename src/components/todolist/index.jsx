@@ -85,7 +85,7 @@ class TodoList extends Component {
   handleSaveItem = () => {
     const { editingItemId, editingItemText } = this.state;
     // Check if editingItemText is empty
-    if (checkEmptyInput(this.state.newItemText)) {
+    if (checkEmptyInput(this.state.editingItemText)) {
       return;
     }
     // Update the content of the edited item in state.items
