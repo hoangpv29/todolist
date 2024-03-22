@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import "./todolist.css"; // Import CSS file
+import Button from "./CustomButton";
+import CustomInput from "./CustomInput";
+import { checkEmptyInput } from "../../checkErr";
 
 class TodoList extends Component {
   constructor(props) {
@@ -40,29 +43,33 @@ class TodoList extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalId);
-    console.log("willunmout");
     // Phương thức này được gọi trước khi component sẽ bị gỡ bỏ khỏi DOM
     // Trong trường hợp này, không có xử lý cụ thể được thực hiện
     // Nhưng có thể sử dụng để log hoặc thực hiện các tác vụ cần thiết trước khi unmount
   }
 
   // Hàm xử lý sự kiện thay đổi nội dung của ô nhập
-  handleInputChange = (event) => {
+  handleInputAdd = (event) => {
     this.setState({ newItemText: event.target.value });
+  };
+
+  handleInputEdit = (event) => {
+    this.setState({ editingItemText: event.target.value });
   };
 
   // Hàm xử lý sự kiện thêm mục mới
   handleAddItem = () => {
-    if (this.state.newItemText.trim() !== "") {
-      // Nếu nội dung mới không rỗng, thêm một mục mới vào danh sách
-      this.setState((prevState) => ({
-        items: [
-          ...prevState.items,
-          { id: Date.now(), text: prevState.newItemText },
-        ],
-        newItemText: "", // Xóa nội dung mới sau khi thêm mục
-      }));
+    if (checkEmptyInput(this.state.newItemText)) {
+      return;
     }
+    this.setState((prevState) => ({
+      items: [
+        ...prevState.items,
+        { id: Date.now(), text: prevState.newItemText },
+      ],
+      newItemText: "",
+    }));
+    // }
   };
 
   // Hàm xử lý sự kiện bắt đầu chỉnh sửa mục
@@ -77,12 +84,14 @@ class TodoList extends Component {
   // Hàm xử lý sự kiện lưu thay đổi của mục
   handleSaveItem = () => {
     const { editingItemId, editingItemText } = this.state;
-    // Cập nhật nội dung mới của mục đã chỉnh sửa vào state.items
+    // Check if editingItemText is empty
+    checkEmptyInput(editingItemText);
+    // Update the content of the edited item in state.items
     this.setState((prevState) => ({
       items: prevState.items.map((item) =>
         item.id === editingItemId ? { ...item, text: editingItemText } : item
       ),
-      editingItemId: null, // Reset lại state sau khi lưu
+      editingItemId: null, // Reset state after saving
       editingItemText: "",
     }));
   };
@@ -113,7 +122,7 @@ class TodoList extends Component {
       }
     });
   };
-  showDom = () => {
+  isDisplay = () => {
     this.setState({ show: !this.state.show });
     if (this.state.show === true) {
       this.componentWillUnmount();
@@ -128,18 +137,21 @@ class TodoList extends Component {
         <h1>Todo List</h1>
         {/* Ô nhập cho mục mới */}
         {this.state.show && <h2>Timer: {this.state.seconds} seconds</h2>}
-        <button onClick={this.showDom}>Show - Hidden</button>
-        <input
-          type="text"
+        <button onClick={this.isDisplay}>Show - Hidden</button>
+
+        <CustomInput
+          className={"todo-input"}
+          onChange={this.handleInputAdd}
+          placeholder={"Click button to add a new item"}
           value={this.state.newItemText}
-          onChange={this.handleInputChange}
-          placeholder="Click button to add a new item"
-          className="todo-input"
         />
-        {/* Nút thêm mục mới */}
-        <button onClick={this.handleAddItem} className="add-button">
-          Add Item
-        </button>
+
+        <Button
+          onClick={this.handleAddItem}
+          title={"Add Item"}
+          typeButtonColor={"add"}
+        />
+
         {/* Danh sách các mục trong todo list */}
         <ul className="todo-list">
           {this.state.items.map((item) => (
@@ -147,46 +159,46 @@ class TodoList extends Component {
               {/* Kiểm tra nếu mục đang được chỉnh sửa */}
               {item.id === this.state.editingItemId && (
                 <>
-                  {/* Ô nhập cho việc chỉnh sửa */}
-                  <input
-                    type="text"
+                  <CustomInput
+                    className={"edit-input"}
+                    onChange={this.handleInputEdit}
+                    placeholder={"Click button to add a new item"}
                     value={this.state.editingItemText}
-                    onChange={(e) =>
-                      this.setState({ editingItemText: e.target.value })
-                    }
-                    className="edit-input"
                   />
-                  {/* Nút lưu chỉnh sửa */}
-                  <button onClick={this.handleSaveItem} className="save-button">
-                    Save
-                  </button>
-                  {/* Nút hủy chỉnh sửa */}
-                  <button
+
+                  <Button
+                    title={"Save"}
+                    typeButtonColor={"save"}
+                    onClick={this.handleSaveItem}
+                  />
+
+                  <Button
+                    title={"Cancel"}
+                    typeButtonColor={"cancel"}
                     onClick={this.handleCancelEdit}
-                    className="cancel-button"
-                  >
-                    Cancel
-                  </button>
+                  />
                 </>
               )}
+
               {localStorage.getItem("items") && (
                 <>
                   {/* Hiển thị nội dung của mục */}
                   <span className="item-text">{item.text}</span>
-                  {/* Nút chỉnh sửa mục */}
-                  <button
-                    onClick={() => this.handleEditItem(item.id, item.text)}
-                    className="edit-button"
-                  >
-                    Edit
-                  </button>
-                  {/* Nút xóa mục */}
-                  <button
-                    onClick={() => this.handleDeleteItem(item.id)}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
+
+                  <Button
+                    title={"Edit"}
+                    typeButtonColor={"edit"}
+                    onClick={this.handleEditItem}
+                    itemId={item.id}
+                    itemText={item.text}
+                  />
+
+                  <Button
+                    title={"Delete"}
+                    typeButtonColor={"delete"}
+                    onClick={this.handleDeleteItem}
+                    itemId={item.id}
+                  />
                 </>
               )}
             </li>
