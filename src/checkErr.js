@@ -5,3 +5,4 @@ export const checkEmptyInput = (inputText) => {
   }
   return false;
 };
+
