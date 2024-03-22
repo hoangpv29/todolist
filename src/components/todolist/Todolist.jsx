@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import "./todolist.css"; // Import CSS file
 
@@ -20,6 +19,7 @@ class TodoList extends Component {
   componentDidMount() {
     // Khi component được mount, kiểm tra xem đã có dữ liệu lưu trong localStorage hay chưa
     const items = localStorage.getItem("items");
+
     if (items) {
       // Nếu có, cập nhật danh sách mục từ localStorage
       this.setState({ items: JSON.parse(items) });
@@ -40,6 +40,7 @@ class TodoList extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalId);
+    console.log("willunmout");
     // Phương thức này được gọi trước khi component sẽ bị gỡ bỏ khỏi DOM
     // Trong trường hợp này, không có xử lý cụ thể được thực hiện
     // Nhưng có thể sử dụng để log hoặc thực hiện các tác vụ cần thiết trước khi unmount
@@ -114,6 +115,11 @@ class TodoList extends Component {
   };
   showDom = () => {
     this.setState({ show: !this.state.show });
+    if (this.state.show === true) {
+      this.componentWillUnmount();
+    } else {
+      this.componentDidMount();
+    }
   };
 
   render() {
@@ -121,7 +127,7 @@ class TodoList extends Component {
       <div className="todo-container">
         <h1>Todo List</h1>
         {/* Ô nhập cho mục mới */}
-        {this.state.show ? <h2>Timer: {this.state.seconds} seconds</h2> : null}
+        {this.state.show && <h2>Timer: {this.state.seconds} seconds</h2>}
         <button onClick={this.showDom}>Show - Hidden</button>
         <input
           type="text"
@@ -139,7 +145,7 @@ class TodoList extends Component {
           {this.state.items.map((item) => (
             <li key={item.id} className="todo-item">
               {/* Kiểm tra nếu mục đang được chỉnh sửa */}
-              {item.id === this.state.editingItemId ? (
+              {item.id === this.state.editingItemId && (
                 <>
                   {/* Ô nhập cho việc chỉnh sửa */}
                   <input
@@ -162,7 +168,8 @@ class TodoList extends Component {
                     Cancel
                   </button>
                 </>
-              ) : (
+              )}
+              {localStorage.getItem("items") && (
                 <>
                   {/* Hiển thị nội dung của mục */}
                   <span className="item-text">{item.text}</span>
